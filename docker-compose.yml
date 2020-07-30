@@ -1,13 +1,33 @@
-version: '3'
+version: "3.6"
+
 services:
+
   db:
+    restart: always
     image: postgres
-  web:
-    build: .
-    command: python manage.py runserver 0.0.0.0:8000
-    volumes:
-      - .:/code
+    container_name: postgres #you can change this
+    environment:
+      - POSTGRES_USER=anya
+      - POSTGRES_PASS=1111
+      - POSTGRES_DB=djangogirls
+      - POSTGRES_PORT=5432
     ports:
-      - "8000:8000"
-    depends_on:
-      - db
+      - "5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+
+  pgadmin:
+      image: dpage/pgadmin4
+      container_name: pgadmin #you can change this
+      depends_on:
+        - db
+      ports:
+        - "5051:80"
+      environment:
+        PGADMIN_DEFAULT_EMAIL: anya
+        PGADMIN_DEFAULT_PASSWORD: 1111
+      restart: always
+
+
+volumes:
+  postgres_data:
